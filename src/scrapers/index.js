@@ -1,6 +1,3 @@
-// src/scrapers/index.js
-
-// ARS Scrapers
 const { scrapeAmbito } = require('./ambito');
 const { scrapeCronista } = require('./cronista');
 const { scrapeDolarHoy } = require('./dolarhoy');

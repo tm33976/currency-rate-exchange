@@ -8,7 +8,7 @@ async function scrapeNubankBRL() {
   const url = 'https://nubank.com.br/taxas-conversao/';
 
   try {
-    // Step 1: Try standard fetch first (fast path)
+   
     const html = await fetchHtml(url);
     const $ = cheerio.load(html);
     const body = $('body').text();
@@ -23,7 +23,6 @@ async function scrapeNubankBRL() {
       }
     }
 
-    // Step 2: Fallback to Puppeteer if Axios version fails
     console.warn('[Nubank] Switching to Puppeteer...');
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
     const page = await browser.newPage();
@@ -41,13 +40,12 @@ async function scrapeNubankBRL() {
       }
     }
 
-    // Step 3: Fallback — use cached rate if available
     if (lastNubankRate) {
       console.warn('[Nubank] Using cached rate (page data unavailable)');
       return { source: url, buy_price: lastNubankRate, sell_price: lastNubankRate };
     }
 
-    // Step 4: If everything fails
+   
     return { source: url, buy_price: null, sell_price: null };
   } catch (err) {
     console.warn(`[Nubank] Failed: ${err.message}`);

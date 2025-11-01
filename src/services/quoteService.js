@@ -1,4 +1,3 @@
-// src/services/quoteService.js
 const { insertQuote, getLatestQuotesByCurrency } = require('../db');
 const SOURCES = require('../scrapers'); // ✅ This is the important part
 const { POLL_INTERVAL_MS } = require('../config');

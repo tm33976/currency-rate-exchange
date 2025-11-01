@@ -5,7 +5,7 @@ async function scrapeCronista() {
   const html = await fetchHtml(url);
   const $ = cheerio.load(html);
 
-  // Try to find buy/sell near labels
+ 
   let buy = null, sell = null;
   $('*').each((i, el) => {
     const txt = $(el).text();

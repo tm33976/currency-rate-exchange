@@ -7,7 +7,7 @@ async function scrapeDolarHoy() {
 
   // dolarhoy exposes a few cards. We'll look for 'Compra' and 'Venta' within the page.
   let buy = null, sell = null;
-  // look for CSS classes commonly used
+
   $('*').each((i, el) => {
     const txt = $(el).text();
     if (!buy && /compra/i.test(txt)) {

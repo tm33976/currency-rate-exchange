@@ -1,4 +1,3 @@
-// src/scrapers/exchangerate_brl.js
 const axios = require('axios');
 
 async function scrapeExchangerateHostBRL() {

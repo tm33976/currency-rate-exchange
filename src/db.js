@@ -1,4 +1,3 @@
-// src/db.js
 const Database = require('better-sqlite3');
 const { SQLITE_FILE } = require('./config');
 const fs = require('fs');
@@ -7,7 +6,7 @@ const path = require('path');
 // Resolve data directory
 const dataDir = path.dirname(SQLITE_FILE);
 
-// ✅ Try to create data directory only if allowed
+//  Try to create data directory only if allowed
 try {
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
@@ -17,14 +16,14 @@ try {
   }
 } catch (err) {
   console.warn(
-    `[DB] ⚠️ Could not create directory "${dataDir}". Probably read-only environment. Skipping...`
+    `[DB]  Could not create directory "${dataDir}". Probably read-only environment. Skipping...`
   );
 }
 
-// ✅ Initialize SQLite
+//  Initialize SQLite
 const db = new Database(SQLITE_FILE);
 
-// ✅ Create schema if not exists
+//  Create schema if not exists
 db.exec(`
   CREATE TABLE IF NOT EXISTS quotes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +38,7 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_quotes_currency ON quotes(currency);
 `);
 
-// ✅ Insert one record
+
 function insertQuote({ source, currency, buy_price, sell_price, fetched_at }) {
   try {
     const stmt = db.prepare(`
@@ -48,7 +47,7 @@ function insertQuote({ source, currency, buy_price, sell_price, fetched_at }) {
     `);
     stmt.run({ source, currency, buy_price, sell_price, fetched_at });
   } catch (err) {
-    console.error(`[DB] ❌ insertQuote error: ${err.message}`);
+    console.error(`[DB]  insertQuote error: ${err.message}`);
   }
 }
 
@@ -70,12 +69,12 @@ function getLatestQuotesByCurrency(currency) {
       .all(currency, currency);
     return rows;
   } catch (err) {
-    console.error(`[DB] ❌ getLatestQuotesByCurrency error: ${err.message}`);
+    console.error(`[DB]  getLatestQuotesByCurrency error: ${err.message}`);
     return [];
   }
 }
 
-// ✅ Fetch all records (debug use)
+
 function getAllQuotes() {
   try {
     return db

@@ -12,7 +12,7 @@ async function fetchHtml(url) {
       'Connection': 'keep-alive'
     },
     timeout: 15000,
-    validateStatus: (status) => status < 500 // 403 won't auto-throw
+    validateStatus: (status) => status < 500 
   });
 
   if (resp.status >= 400) {

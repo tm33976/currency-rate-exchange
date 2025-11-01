@@ -1,4 +1,3 @@
-// src/scrapers/ambito.js
 const { fetchHtml, parseNumber, cheerio } = require('./baseScraper');
 const puppeteer = require('puppeteer');
 
@@ -9,7 +8,7 @@ async function scrapeAmbito() {
   let html;
 
   try {
-    // --- Step 1: Try normal Axios fetch
+   
     try {
       html = await fetchHtml(url);
     } catch (err) {
@@ -21,11 +20,10 @@ async function scrapeAmbito() {
       }
     }
 
-    // --- Step 2: Parse HTML
+
     const $ = cheerio.load(html);
     let buy = null, sell = null;
 
-    // Try Ambito’s latest data structure
     const textBody = $('body').text();
     const ratePattern = textBody.match(/[\d]{1,3}(?:[.,]\d{2,3})+/g);
 
@@ -34,7 +32,7 @@ async function scrapeAmbito() {
       sell = parseNumber(ratePattern[1]);
     }
 
-    // DOM fallback (look for Compra / Venta)
+   
     if (!buy || !sell) {
       $('*').each((i, el) => {
         const text = $(el).text().trim();
@@ -57,23 +55,23 @@ async function scrapeAmbito() {
       sell = sell || parseNumber(ratePattern[1]);
     }
 
-    // --- Step 3: Handle cache and results
+   
     if (buy && sell) {
       lastCached = { buy, sell, fetched_at: Date.now() };
-      console.log(`[Ambito] ✅ Scraped successfully: buy=${buy}, sell=${sell}`);
+      console.log(`[Ambito]  Scraped successfully: buy=${buy}, sell=${sell}`);
     } else if (lastCached.buy && lastCached.sell) {
-      console.warn('[Ambito] ⚠️ Using cached values (scrape failed)');
+      console.warn('[Ambito]  Using cached values (scrape failed)');
       buy = lastCached.buy;
       sell = lastCached.sell;
     } else {
-      console.warn('[Ambito] ❌ Could not extract valid data (no cache yet)');
+      console.warn('[Ambito]  Could not extract valid data (no cache yet)');
     }
 
     return { source: url, buy_price: buy, sell_price: sell };
   } catch (err) {
-    console.warn(`[Ambito] ❌ Fatal error: ${err.message}`);
+    console.warn(`[Ambito]  Fatal error: ${err.message}`);
     if (lastCached.buy && lastCached.sell) {
-      console.warn('[Ambito] ⚠️ Returning cached values after error');
+      console.warn('[Ambito]  Returning cached values after error');
       return {
         source: url,
         buy_price: lastCached.buy,
@@ -84,7 +82,7 @@ async function scrapeAmbito() {
   }
 }
 
-// --- Puppeteer Fallback
+
 async function scrapeWithPuppeteer(url) {
   const browser = await puppeteer.launch({
     headless: true,
@@ -105,19 +103,19 @@ async function scrapeWithPuppeteer(url) {
 
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
-    // Modern Puppeteer delay (replacement for page.waitForTimeout)
+  
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const pageText = await page.evaluate(() => document.body.innerText);
     const matches = pageText.match(/[\d]{1,3}(?:[.,]\d{2,3})+/g);
 
     if (matches && matches.length >= 2) {
-      console.log(`[Ambito Puppeteer] ✅ Extracted: ${matches[0]} / ${matches[1]}`);
+      console.log(`[Ambito Puppeteer]  Extracted: ${matches[0]} / ${matches[1]}`);
     }
 
     return pageText;
   } catch (err) {
-    console.warn(`[Ambito Puppeteer] ❌ Failed: ${err.message}`);
+    console.warn(`[Ambito Puppeteer]  Failed: ${err.message}`);
     return '';
   } finally {
     await browser.close();

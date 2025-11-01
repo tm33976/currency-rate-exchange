@@ -13,7 +13,7 @@ function computeAverage(quotes) {
 }
 
 function computeSlippage(quotes, average) {
-  // returns array of { source, buy_price_slippage, sell_price_slippage }
+
   const avgBuy = average.average_buy_price;
   const avgSell = average.average_sell_price;
   return quotes.map(q => {
