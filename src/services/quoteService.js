@@ -1,5 +1,5 @@
 const { insertQuote, getLatestQuotesByCurrency } = require('../db');
-const SOURCES = require('../scrapers'); // ✅ This is the important part
+const SOURCES = require('../scrapers'); 
 const { POLL_INTERVAL_MS } = require('../config');
 
 async function fetchAllForCurrency(currency) {
